@@ -21,7 +21,7 @@ struct File_graph
 
 void StartOutput( struct File_graph* file );
 void FinishOutput( struct File_graph* file );
-enum Errors WritePrimaryNodes( struct List* list, struct File_graph* file );
-enum Errors WriteSecondaryNodes( struct List* list, struct File_graph* file );
+enum Errors WritePrimaryNodes( struct Array* list, struct File_graph* file );
+enum Errors WriteSecondaryNodes( struct Array* list, struct File_graph* file );
 
 #endif

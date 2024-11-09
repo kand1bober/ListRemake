@@ -3,7 +3,7 @@ CC = g++
 CFLAGS = -fsanitize=address,undefined -D _DEBUG -O0 -Wall -Wextra
 
 
-SOURCES_DIR = Src
+SOURCES_DIR = Sources
 
 SOURCES = $(wildcard $(SOURCES_DIR)/*cpp ) 
 

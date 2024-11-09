@@ -1,4 +1,5 @@
 #include "../Headers/list_functions.h"
+#include <cstdlib>
 
 enum Errors ListCtor( struct Array* list )
 {
@@ -14,10 +15,13 @@ enum Errors ListCtor( struct Array* list )
     list->elem->next = 1;
     list->elem->prev = 1;
     //---------------------
-    list->free->next = 1;
-    list->free->prev = 1;
-    //---------------------
+    (list->free + 1)->free_elem = 1;
 
+    for(size_t i = 0; i < list->real_capacity - 1; i++)
+    {
+        (list->free + i)->next = i + 1;
+    }
+    list->free_size = 1;
     return GOOD_CTOR;
 }
 
@@ -34,17 +38,26 @@ enum Errors ListDtor( struct Array* list )
 }
 
 
-enum Errors ListInsert( struct Array* list, int pivot, ListElem* elem  )
+enum Errors ListInsert( struct Array* list, int pivot, ListElem elem  )
 {
     assert( list );
     assert( list->elem );
     assert( list->free);
 
+    ListDump(list);
+
+    if( ((uint64_t)pivot >= list->real_capacity) || ((uint64_t)pivot > list->list_size + 1) || (pivot == 0) )
+    {
+        printf(RED "Just wrong input\n" DELETE_COLOR);
+        return BAD_INSERT;
+    }
+
     list->list_size++;
 
     int free_elem = 0;
-    free_elem = FreeDelete();
-    (list->elem + free_elem)->value = *elem;
+    FreeDelete( list, &free_elem );
+        ON_DEBUG( printf(YELLOW "free_elem: %d\n" DELETE_COLOR, free_elem); )
+    (list->elem + free_elem)->value = elem;
     //---------------NEXTS-----------------------------------
     int next_target = 0;
     for(int i = 0; i < pivot - 1; i++)
@@ -58,8 +71,11 @@ enum Errors ListInsert( struct Array* list, int pivot, ListElem* elem  )
     {
         (list->elem + free_elem)->next = pivot_next_target;
     }
-    //-------------------------------------------------------
 
+    ListDump(list);
+
+    //-------------------------------------------------------
+/*
     //----------------PREVS----------------------------------
     int prev_target = 0;
     for(int i = 0; i < (list->list_size - pivot + 1); i++)
@@ -69,6 +85,9 @@ enum Errors ListInsert( struct Array* list, int pivot, ListElem* elem  )
 
     //TODO:
     //-------------------------------------------------------
+*/
+
+    return GOOD_INSERT;
 }
 
 
@@ -77,8 +96,6 @@ enum Errors ListDelete( struct Array* list, int pivot )
     assert( list );
     assert( list->elem );
     assert( list->free);
-
-    
 
     //---------------NEXTS-----------------------------------
     int next_target = 0;
@@ -90,7 +107,7 @@ enum Errors ListDelete( struct Array* list, int pivot )
 
 
     //-------------------------------------------------------
-
+/*
     //----------------PREVS----------------------------------
     int prev_target = 0;
     for(int i = 0; i < (list->list_size - pivot + 1); i++)
@@ -101,6 +118,7 @@ enum Errors ListDelete( struct Array* list, int pivot )
     //TODO:
     list->list_size--;
     //-------------------------------------------------------
+    */
 }
 
 
@@ -118,20 +136,37 @@ enum Errors Take( struct Array* list, int number, ListElem* elem )
 }
 
 
-enum Errors FreeDelete( struct Array* list, int* ip )
+enum Errors FreeInsert( struct Array* list, int ip )
 {
-    int target_ip = 0;
-    for(int i = 0; i < list->list_size + 1; i++)
-    {
-        target_ip = (list->free + target_ip)->
-    }
+    int next_target = 0;
 
+    (list->free + list->free_size + 1)->free_elem = ip;
+    (list->free + list->free_size + 1)->next = 0;
+    (list->free + list->free_size)->next = list->free_size + 1;
+    list->free_size++;
+        
+    return GOOD_FREE_INSERT;
 }
 
 
-enum Errors FreeInsert()
+enum Errors FreeDelete( struct Array* list, int* ip )
 {
+    *ip = (list->free + list->free_size)->free_elem;
 
+    if( list->free_size < 2)
+    {
+        (list->free + list->free_size)->free_elem = (list->free + list->free_size)->free_elem + 1;
+        return GOOD_FREE_DELETE;
+    }
+    else 
+    {    
+        (list->free + list->free_size)->free_elem = -1;
+        (list->free + list->free_size)->next = -1;
+        (list->free + list->free_size - 1)->next = 0;
+
+        list->free_size--;
+        return GOOD_FREE_DELETE;
+    }
 }
 
 
@@ -139,7 +174,7 @@ void ListDump( struct Array* list )
 {
     printf(GREEN "====== Begin of ListDump ======\n" DELETE_COLOR);
 
-    printf("list->real_capacity: %lu\nlist->size%lu\nlist->free_size%lu\n\n", list->real_capacity, list->list_size, list->free_size);
+    printf("list->real_capacity: %lu\nlist->size: %lu\nlist->free_size: %lu\n\n", list->real_capacity, list->list_size, list->free_size);
     printf(SINIY "\n[i]  Number Dump     Next    Prev     [i]\n" DELETE_COLOR);
     for(size_t i = 0 ; i < list->real_capacity; i++)
     {
@@ -149,11 +184,11 @@ void ListDump( struct Array* list )
     printf("\n\n");
 
 
-    printf(SINIY "\n[i]  Free  Dump      Next    Prev     [i]\n" DELETE_COLOR);
+    printf(SINIY "\n[i]  Free  Dump      Next      [i]\n" DELETE_COLOR);
     for(size_t i = 0 ; i < list->real_capacity; i++)
     {
-        printf(ORANGE "[%02lu]" DELETE_COLOR "  %7d   ---  %3d    " ORANGE "[%02lu]" DELETE_COLOR "\n", 
-        i, list->free[i].next, list->free[i].prev, i );
+        printf(ORANGE "[%02lu]" DELETE_COLOR "  %7d        %3d     " ORANGE "[%02lu]" DELETE_COLOR "\n", 
+        i, list->free[i].free_elem, list->free[i].next, i );
     }
     printf("\n");
 

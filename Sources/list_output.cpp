@@ -1,7 +1,9 @@
-// #include "../Headers/functions.h"
+#include "../Headers/list_functions.h"
 #include "../Headers/list_utilities.h"
-#include "../Headers/output.h"
+#include "../Headers/list_output.h"
 #include "../Headers/list_decoration.h"
+
+
 
 
 void StartOutput( struct File_graph* file )
@@ -17,6 +19,7 @@ void StartOutput( struct File_graph* file )
 
     //============================== GRAPH FILE ====================================
     file->stream = fopen(code_filepath, "w");
+
     fprintf(file->stream, "digraph G\n{\nconcentrate=true"
     "\nsplines=ortho\nlabel=\"Real array elements\";\nlabelloc=\"t\";\nfontsize=30\nfontname=\"Verdana\"\n"
     "rankdir=LR;size=\"200,300\";bgcolor=\"%s\";\n"

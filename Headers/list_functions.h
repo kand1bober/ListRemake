@@ -40,26 +40,30 @@ enum Errors
     BAD_FREE_DELETE,
 };
 
+//односвязный список свободных ячеек
 struct FreeCell
 {
-    int next;
-    int prev;
+    int free_elem; //реальный номер ячейки
+    int next; //рельный номер
+    // int prev; //реальный номер
 };
 
 struct Cell
 {
-    ListElem value;
-    int next;
-    int prev;
+    ListElem value; 
+    int next; //реальный
+    int prev; //реальный
 };
 
 struct Array
 {
     Cell* elem;
-    uint64_t list_size;
+    uint64_t list_size; //логический размер, двигаемся с первого члена, отсчёт от нулевого
+
     FreeCell* free;
-    uint64_t free_size;
-    uint64_t real_capacity;
+    uint64_t free_size; //логический размер, двигаемся с первого члена, отсчёт от нулевого
+
+    uint64_t real_capacity; //реальное место в памяти 
 };  
 
 
@@ -67,14 +71,14 @@ struct Array
 enum Errors ListCtor( struct Array* list );
 enum Errors ListDtor( struct Array* list );
 void ListDump( struct Array* list );
-enum Errors ListInsert( struct Array* list, int pivot, ListElem* elem  );
+enum Errors ListInsert( struct Array* list, int pivot, ListElem elem  );
 enum Errors ListDelete( struct Array* list, int pivot );
 enum Errors ListTake( );
 //=======================================
 
 //=======================================
-enum Errors FreeInsert();
-enum Errors FreeDelete();
+enum Errors FreeInsert( struct Array* list, int ip );
+enum Errors FreeDelete( struct Array* list, int* ip );
 //=======================================
 
 #endif
