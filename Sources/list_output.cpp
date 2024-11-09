@@ -21,7 +21,7 @@ void StartOutput( struct File_graph* file )
     file->stream = fopen(code_filepath, "w");
 
     fprintf(file->stream, "digraph G\n{\nconcentrate=true"
-    "\nsplines=ortho\nlabel=\"Real array elements\";\nlabelloc=\"t\";\nfontsize=30\nfontname=\"Verdana\"\n"
+    "\nsplines=ortho;\nlabel=\"Real array elements\";\nlabelloc=\"t\";\nfontsize=30\nfontname=\"Verdana\"\n"
     "rankdir=LR;size=\"200,300\";bgcolor=\"%s\";\n"
     "edge[color=\"#000000\",fontcolor=\"#000000\",fontsize=10];\n", bgcolor);
     //==============================================================================
@@ -78,7 +78,7 @@ enum Errors WritePrimaryNodes( struct Array* list, struct File_graph* file )
                                 i+1, fillcolor, default_pointer_color, i+1, i+1, i+1, elem2, target_next_2, target_next_2, i+1, target_prev_2 );
         
 
-        fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1];\n", i, i+1, default_pointer_color);
+        fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1, ordering=out];\n", i, i+1, default_pointer_color);
     }
 
     return GOOD_WRITE_NODES;
@@ -124,14 +124,14 @@ enum Errors WriteSecondaryNodes( struct Array* list, struct File_graph* file )
 
             if( ( (size_t)target_next_1 == g ) && ( !( (i == 0) && (g == 0) ) ) )
             {
-                ON_DEBUG( printf(YELLOW "printfng: ip:%lu <%d> -> ip:%lu <%lu>\n" DELETE_COLOR, i, target_next_1, g, g ); )
+                // ON_DEBUG( printf(YELLOW "printfng: ip:%lu <%d> -> ip:%lu <%lu>\n" DELETE_COLOR, i, target_next_1, g, g ); )
                 fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1] ;\n", i, g, next_pointer_color);
             }
             else 
             {
-                ON_DEBUG( printf(PURPLE"not printfng: ip:%lu <%d> -> ip:%lu <%lu>\n" DELETE_COLOR, i, target_next_1, g, g ); )
+                // ON_DEBUG( printf(PURPLE"not printfng: ip:%lu <%d> -> ip:%lu <%lu>\n" DELETE_COLOR, i, target_next_1, g, g ); )
             }
-
+            
             if( ( (size_t)target_prev_1 == g ) && ( !( (i == 0) && (g == 0) ) ) )
             {
                 fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1] ;\n", g, i, prev_pointer_color);
