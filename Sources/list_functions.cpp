@@ -17,6 +17,8 @@ enum Errors ListCtor( struct Array* list )
     list->free->next = 1;
     list->free->prev = 1;
     //---------------------
+
+    return GOOD_CTOR;
 }
 
 
@@ -32,13 +34,51 @@ enum Errors ListDtor( struct Array* list )
 }
 
 
-enum Errors ListInsert( struct Array* list, int pivot )
+enum Errors ListInsert( struct Array* list, int pivot, ListElem* elem  )
 {
     assert( list );
     assert( list->elem );
     assert( list->free);
 
     list->list_size++;
+
+    int free_elem = 0;
+    free_elem = FreeDelete();
+    (list->elem + free_elem)->value = *elem;
+    //---------------NEXTS-----------------------------------
+    int next_target = 0;
+    for(int i = 0; i < pivot - 1; i++)
+    {
+        next_target = (list->elem + next_target)->next;
+    }
+    int pivot_next_target = (list->elem + next_target)->next;
+
+    (list->elem + next_target)->next = free_elem;
+    if( pivot_next_target != free_elem )
+    {
+        (list->elem + free_elem)->next = pivot_next_target;
+    }
+    //-------------------------------------------------------
+
+    //----------------PREVS----------------------------------
+    int prev_target = 0;
+    for(int i = 0; i < (list->list_size - pivot + 1); i++)
+    {
+        prev_target = (list->elem + prev_target)->prev;
+    }
+
+    //TODO:
+    //-------------------------------------------------------
+}
+
+
+enum Errors ListDelete( struct Array* list, int pivot )
+{
+    assert( list );
+    assert( list->elem );
+    assert( list->free);
+
+    
 
     //---------------NEXTS-----------------------------------
     int next_target = 0;
@@ -47,6 +87,8 @@ enum Errors ListInsert( struct Array* list, int pivot )
         next_target = (list->elem + next_target)->next;
     }
     int pivot_next_target = (list->elem + next_target)->next;
+
+
     //-------------------------------------------------------
 
     //----------------PREVS----------------------------------
@@ -57,29 +99,41 @@ enum Errors ListInsert( struct Array* list, int pivot )
     }
 
     //TODO:
+    list->list_size--;
     //-------------------------------------------------------
 }
 
 
-enum Errors Take()
+enum Errors Take( struct Array* list, int number, ListElem* elem )
 {
+    int target = 0;
+    for(int i = 0; (i < number) && (i < list->list_size); i++)
+    {
+        target = (list->elem + target)->next;
+    }
 
+    *elem = (list->elem + target)->value;
 
+    return GOOD_TAKE;
 }
 
 
-
-
-enum Errors FreeDelete()
+enum Errors FreeDelete( struct Array* list, int* ip )
 {
-
+    int target_ip = 0;
+    for(int i = 0; i < list->list_size + 1; i++)
+    {
+        target_ip = (list->free + target_ip)->
+    }
 
 }
+
 
 enum Errors FreeInsert()
 {
 
 }
+
 
 void ListDump( struct Array* list )
 {

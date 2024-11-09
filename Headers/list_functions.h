@@ -64,13 +64,12 @@ struct Array
 
 
 //========================================
-enum Errors ListCtor( );
-enum Errors ListDtor( );
-void ListDump( );
-enum Errors ListInsert( ) ;
-enum Errors ListDelete( );
-enum Errors ListTakeHead( );
-enum Errors ListTakeTale( );
+enum Errors ListCtor( struct Array* list );
+enum Errors ListDtor( struct Array* list );
+void ListDump( struct Array* list );
+enum Errors ListInsert( struct Array* list, int pivot, ListElem* elem  );
+enum Errors ListDelete( struct Array* list, int pivot );
+enum Errors ListTake( );
 //=======================================
 
 //=======================================
