@@ -10,10 +10,16 @@ enum Errors ListCtor( struct Array* list )
     list->free_size = 0;
     list->real_capacity = START_LIST_SIZE;
 
+    //--------------------
+    for(int i = 0; i < (int)list->real_capacity; i++)
+    {
+        (list->elem + i)->next = -1;
+        (list->elem + i)->prev = -1;
+    }
     //---------------------
     list->elem->value = 0;
     list->elem->next = 1;
-    // list->elem->prev = 1;
+    list->elem->prev = 1;
     //---------------------
     (list->free + 1)->free_elem = 1;
 
@@ -22,6 +28,7 @@ enum Errors ListCtor( struct Array* list )
         (list->free + i)->next = i + 1;
     }
     list->free_size = 1;
+
     return GOOD_CTOR;
 }
 
@@ -68,9 +75,10 @@ enum Errors ListInsert( struct Array* list, int pivot, ListElem elem  )
     int pivot_next_target = (list->elem + next_target)->next;
 
     (list->elem + next_target)->next = free_elem;
-    if( pivot_next_target != free_elem )
+    if( pivot_next_target != free_elem ) //TODO: частные случаи
     {
         (list->elem + free_elem)->next = pivot_next_target;
+        
     }
     //-------------------------------------------------------
 
@@ -93,9 +101,18 @@ enum Errors ListInsert( struct Array* list, int pivot, ListElem elem  )
         (list->elem + prev_target)->prev = free_elem;
         (list->elem + free_elem)->prev = pivot_prev_target;
     }
-
+    
     //-------------------------------------------------------
     list->list_size++;
+
+    //---------------------
+    // int new_target = 0;
+    // for(int i = 0; i < (int)list->list_size - 1; i++)
+    // {
+    //     new_target = (list->elem + new_target)->next;
+    // }
+    // (list->elem + new_target)->next = 0;
+    //---------------------
 
     ON_DEBUG( ListDump(list); )
 
@@ -103,7 +120,7 @@ enum Errors ListInsert( struct Array* list, int pivot, ListElem elem  )
 
     return GOOD_INSERT;
 }
-
+        
 
 enum Errors ListDelete( struct Array* list, int pivot )
 {

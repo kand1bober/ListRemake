@@ -15,7 +15,7 @@ typedef double ListElem;
 
 const int START_LIST_SIZE = 10;
 
-const uint64_t POISON_VALUE = 0xBA5ED; // TODO: в конструкторе и деструкторе заполнять 
+const uint64_t POISON_VALUE = 0xBA5ED; 
 
 // Все с большой буквы (kHuyPizda  HUY_PIZDA)
 enum Errors

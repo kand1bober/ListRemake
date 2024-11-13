@@ -125,21 +125,22 @@ enum Errors WriteSecondaryNodes( struct Array* list, struct File_graph* file )
             if( ( (size_t)target_next_1 == g ) && ( !( (i == 0) && (g == 0) ) ) )
             {
                 // ON_DEBUG( printf(YELLOW "printfng: ip:%lu <%d> -> ip:%lu <%lu>\n" DELETE_COLOR, i, target_next_1, g, g ); )
-                fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1] ;\n", i, g, next_pointer_color);
+                fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1];\n", i, g, next_pointer_color);
             }
             else 
             {
                 // ON_DEBUG( printf(PURPLE"not printfng: ip:%lu <%d> -> ip:%lu <%lu>\n" DELETE_COLOR, i, target_next_1, g, g ); )
             }
-            
+/*
             if( ( (size_t)target_prev_1 == g ) && ( !( (i == 0) && (g == 0) ) ) )
             {
-                fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1] ;\n", g, i, prev_pointer_color);
+                fprintf(file->stream, "node_%lu -> node_%lu [color = \"%s\", arrowsize = 1];\n", g, i, prev_pointer_color);
             }
             else 
             {
                 ;
             }
+*/            
         }
     }
 
